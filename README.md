@@ -6,3 +6,4 @@ An advanced HTML-based RDS decoder for TEF webservers.
 <br>
 <br>
 Documentation to be added soon...
+Special mention to [@mrwish7](https://github.com/mrwish7/) for the initial implementation of the websocket decoding.
