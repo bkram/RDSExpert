@@ -2,7 +2,7 @@
 export interface RdsData {
   pi: string;          // Program Identification (e.g., F202)
   ps: string;          // Program Service (e.g., SKYROCK)
-  longPs: string;      // Long Program Service (Max 16 chars, via Group 15A/15B)
+  longPs: string;      // Long Program Service (Max 32 chars, via Group 15A/15B)
   rtA: string;         // Radio Text A (Text A/B Flag = 0)
   rtB: string;         // Radio Text B (Text A/B Flag = 1)
   textAbFlag: boolean; // Current active flag (false=A, true=B)
