@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { RdsData, ConnectionStatus, PTY_RDS, PTY_RBDS, RtPlusTag, EonNetwork, RawGroup, TmcMessage, TmcServiceInfo, PsHistoryItem, RtHistoryItem } from './types';
 import { INITIAL_RDS_DATA } from './constants';
@@ -57,6 +56,7 @@ interface DecoderState {
   rtPlusTags: Map<number, RtPlusTag & { timestamp: number }>; 
   rtPlusItemRunning: boolean;
   rtPlusItemToggle: boolean;
+  hasOda: boolean;
   hasRtPlus: boolean;
   hasEon: boolean;
   hasTmc: boolean;
@@ -374,6 +374,7 @@ const App: React.FC = () => {
     rtPlusTags: new Map(), 
     rtPlusItemRunning: false,
     rtPlusItemToggle: false,
+    hasOda: false,
     hasRtPlus: false,
     hasEon: false,
     hasTmc: false,
@@ -394,8 +395,8 @@ const App: React.FC = () => {
     rawGroupBuffer: [],
 
     // History Tracking Logic
-    piEstablishmentTime: 0,
-    psHistoryLogged: false,
+    piEstablishmentTime: 0, // Timestamp when PI was confirmed
+    psHistoryLogged: false, // Has the current session been logged to history?
   
     // Stability Check for PS History
     psCandidateString: "        ",
@@ -498,6 +499,7 @@ const App: React.FC = () => {
       // Flags
       state.rtPlusItemRunning = false;
       state.rtPlusItemToggle = false;
+      state.hasOda = false;
       state.hasRtPlus = false;
       state.hasEon = false;
       state.hasTmc = false;
@@ -583,6 +585,7 @@ const App: React.FC = () => {
             state.rtPlusItemRunning = false;
             state.rtPlusItemToggle = false;
             // Reset Flags on PI Change
+            state.hasOda = false;
             state.hasRtPlus = false;
             state.hasEon = false;
             state.hasTmc = false;
@@ -977,8 +980,9 @@ const App: React.FC = () => {
             }
         }
     }
-    // Group 3A: ODA Identification
+    // Group 3A: ODA Identification - Strict Dynamic Handshake
     else if (groupTypeVal === 6) {
+        state.hasOda = true; 
         // AID for Radiotext+ is 4BD7
         if (g3 === 0x4BD7 || g4 === 0x4BD7) {
             // Application Group Type Code is in Block 2 bits 4-0 (0-31)
@@ -986,7 +990,8 @@ const App: React.FC = () => {
             state.rtPlusOdaGroup = appGroup;
         }
     }
-    // RT+ Decoding: Only if ODA Group detected match
+    // RT+ Decoding: Only triggered if AID 4BD7 (Group 3A) assigned this specific group
+    // This supports any group (e.g. 11A, 12A, 13A) as long as it was dynamically assigned.
     else if (state.rtPlusOdaGroup !== null && groupTypeVal === state.rtPlusOdaGroup) {
         state.hasRtPlus = true;
         
@@ -1206,7 +1211,7 @@ const App: React.FC = () => {
                 tp: state.tp, ta: state.ta, ms: state.ms, stereo: state.diStereo, artificialHead: state.diArtificialHead, compressed: state.diCompressed, dynamicPty: state.diDynamicPty,
                 ecc: state.ecc, lic: state.lic, pin: state.pin, localTime: state.localTime, utcTime: state.utcTime,
                 textAbFlag: state.abFlag, rtPlus: sortedRtPlusTags, rtPlusItemRunning: state.rtPlusItemRunning, rtPlusItemToggle: state.rtPlusItemToggle,
-                hasRtPlus: state.hasRtPlus, hasEon: state.hasEon, hasTmc: state.hasTmc,
+                hasOda: state.hasOda, hasRtPlus: state.hasRtPlus, hasEon: state.hasEon, hasTmc: state.hasTmc,
                 eonData: eonDataObj,
                 tmcServiceInfo: {...state.tmcServiceInfo}, 
                 tmcMessages: [...state.tmcBuffer],
