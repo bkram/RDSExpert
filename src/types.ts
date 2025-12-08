@@ -10,6 +10,7 @@ export interface RdsData {
   rtPlusItemRunning: boolean; // RT+ Item Running Bit (Group 12A Block 2 Bit 4)
   rtPlusItemToggle: boolean;  // RT+ Item Toggle Bit (Group 12A Block 2 Bit 3)
   hasOda: boolean;     // Flag d'activité ODA (Latched)
+  odaApp?: { name: string; aid: string; group: string }; // Last detected ODA details
   hasRtPlus: boolean;  // Flag d'activité RT+ (Latched)
   hasEon: boolean;     // Flag d'activité EON (Latched)
   hasTmc: boolean;     // Flag d'activité TMC (Latched)
