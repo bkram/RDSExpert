@@ -84,8 +84,8 @@ An extra note: If you are using a server located in America, consider changing t
 | `PTY` | `Program Type` <br> <br> Indicates the type of program broadcast by the station (For example: Pop Music / Rock Music / Easy Listening / Oldies Music / News / …). <br> <br> The display of this information varies depending on whether you are using RDS or RBDS mode. This is why it is important to select RBDS mode if you are connecting to a server located in America. |
 | `PTYN` | Has the same function as `PTY`, with the sole difference that it is fully customizable. <br> This means that an engineer can specify the text/value of his choice (limited to 8 characters) via group 10A. |
 | `Long PS` | Has the same function as `PS`, but in a much extended range. This allows to display the name of a station which is longer than 8 characters (maximum 32 characters), via group 15A. <br> <br> This function is generally very rarely used. |
-| `ECC` | `Extended Country Code` <br> <br> A two-character code identifying the country from which the station broadcasts (Example: E1 for France). <br> <br> This function is rarely used. |
-| `LIC` | `Language Identification Code` <br> <br> A two-character code identifying the language in which the station broadcasts its programs (Example: 0F for French). <br> <br> This function is rarely used. |
+| `ECC` | `Extended Country Code` <br> <br> A two-character code identifying the country from which the station broadcasts (Example: E1 for France). <br> Place your mouse cursor over the `ECC` box to find out which country the code is assigned to. <br> <br> This function is rarely used. |
+| `LIC` | `Language Identification Code` <br> <br> A two-character code identifying the language in which the station broadcasts its programs (Example: 0F for French). <br> Place your mouse cursor over the `LIC` box to find out which language the code is assigned to. <br> <br> This function is rarely used. |
 | `Local CT (Clock Time)` | Displays the date and time according to the time zone of the country from which the station is broadcasting. <br> This function, transmitted via band 4A (generally every 60 seconds, at the beginning of each minute), automatically updates the clocks on listeners' car tuners. |
 | `UTC CT (Clock Time)` | Serves the same purpose as Local CT, with the only difference being that the values ​​transmitted are in UTC (Coordinated Universal Time) format. |
 | `PIN` | `Program Identification Number` <br> <br> This function provides an easy and automatic identification of a program currently being broadcast. <br> The decoder display shows the date and time the program began broadcasting, which some receivers can use for alarm clock functions or automatic recording scheduling. <br> <br> This function is very rarely used today, compared to more than 20 years ago. |
@@ -101,7 +101,7 @@ The other two have questionable usefulness nowadays and are even tending to disa
 There are also four flags above the `ECC` and `LIC` fields: `ODA` / `RT+` / `EON` / `TMC`.
 <br>
 <br>
-If the `ODA` flag (Open Data Applications) is active, it means that a secondary application is being used. To learn more, hover your mouse cursor over the flag, and information about the service will appear along with the group on which it is transmitted. The integrated `ODA` database of RDSExpert allows the identification of about 70 different codes.
+If the `ODA` flag (Open Data Applications) is active, it means that a secondary application is being used. To learn more, place your mouse cursor over the flag, and information about the service will appear along with the group on which it is transmitted. The integrated `ODA` database of RDSExpert allows the identification of about 70 different codes.
 <br>
 <br>
 The `RT+` flag indicates that the station is using the Radiotext+ function. You can view the transmitted information using the dedicated decoder located below.
