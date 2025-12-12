@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { RdsData, ConnectionStatus, PTY_RDS, PTY_RBDS, RtPlusTag, EonNetwork, RawGroup, TmcMessage, TmcServiceInfo, PsHistoryItem, RtHistoryItem, LogEntry } from './types';
 import { INITIAL_RDS_DATA, ODA_MAP } from './constants';
@@ -1114,21 +1113,32 @@ const App: React.FC = () => {
         const g4TimeReconstructed = ((g3 & 0x01) << 15) | (g4 >>> 1);
         const utcHour = (g4TimeReconstructed >>> 11) & 0x1F;
         const utcMin = (g4TimeReconstructed >> 5) & 0x3F;
-        const offsetSign = (g4 >> 4) & 0x01; 
-        const offsetVal = g4 & 0x0F;         
+        
+        // Correct RDS/RBDS Group 4A Block 4 Decoding
+        // Bits 4-0 (5 bits) = Local Time Offset (multiples of 30 min)
+        // Bit 5 = Local Time Offset Sign (1 = Negative, 0 = Positive)
+        const offsetSign = (g4 >> 5) & 0x01; 
+        const offsetVal = g4 & 0x1F;
+        
         if (date) {
-             const dateStr = `${pad(date.day)}/${pad(date.month)}/${date.year}`;
-             const utcStr = `${dateStr} ${pad(utcHour)}:${pad(utcMin)}`;
+             const utcStr = `${pad(date.day)}/${pad(date.month)}/${date.year} ${pad(utcHour)}:${pad(utcMin)}`;
              state.utcTime = utcStr;
-             let totalMin = utcHour * 60 + utcMin;
-             const offsetMin = offsetVal * 30;
-             if (offsetSign === 1) totalMin -= offsetMin;
-             else totalMin += offsetMin;
-             if (totalMin < 0) totalMin += 1440;
-             if (totalMin >= 1440) totalMin -= 1440;
-             const locH = Math.floor(totalMin / 60);
-             const locM = totalMin % 60;
-             state.localTime = `${dateStr} ${pad(locH)}:${pad(locM)}`;
+
+             // Calculate Local Time with JS Date to handle day rollover (e.g. UTC 02:00 - 5h = Previous Day 21:00)
+             const offsetMinutes = offsetVal * 30;
+             const totalOffsetMs = offsetMinutes * 60 * 1000 * (offsetSign === 1 ? -1 : 1);
+
+             // Construct UTC Date (Month is 0-indexed in JS Date, but 1-indexed in date object)
+             const utcTs = Date.UTC(date.year, date.month - 1, date.day, utcHour, utcMin);
+             const localDate = new Date(utcTs + totalOffsetMs);
+
+             const locDay = pad(localDate.getUTCDate());
+             const locMonth = pad(localDate.getUTCMonth() + 1);
+             const locYear = localDate.getUTCFullYear();
+             const locH = pad(localDate.getUTCHours());
+             const locM = pad(localDate.getUTCMinutes());
+
+             state.localTime = `${locDay}/${locMonth}/${locYear} ${locH}:${locM}`;
         }
     }
     else if (groupTypeVal === 20) {
