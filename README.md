@@ -215,8 +215,8 @@ You can pause, reset, or stop the display at any time.
 Here are some examples of groups commonly sent over RDS:
 | Group | Utility / Function |
 | --- | --- |
-| 0A | The most common group: Transmits the `PI` code, `PS`, `PTY`, `AF` list... |
-| 1A | Sends `ECC` (Extended Country Code) and `LIC` (Language Indication Code) information, which allows identification of the country from which the station broadcasts as well as the language in which its programs are broadcast. |
+| 0A | This is the most common group: It transmits the `PI` code, `PS`, `PTY`, `TP`/`TA`/`MS` flags and the `AF` list. |
+| 1A | Sends `ECC` (Extended Country Code) and `LIC` (Language Indication Code) information, which allows identification of the country from which the station broadcasts as well as the language in which its programs are broadcast. <br> It is also used to send `PIN` values. |
 | 2A | Transmits `Radiotext`: Often used to display a slogan or the title of the song being aired by the station, as well as useful information for the listeners. |
 | 3A | Sends the list of the `ODA` applications being used: Allows the receiver to identify which ODA applications are used by the station (The most common examples are `Radiotext+` and `TMC`), if the station uses any. |
 | 4A | Clock Time (`CT`) : Transmits the date and time in order to synchronize the receivers clock, most often car tuners. This group is generally transmitted every 60 seconds, at the beginning of each minute. |
