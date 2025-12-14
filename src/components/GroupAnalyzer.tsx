@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { RdsData } from '../types';
 import { ODA_MAP } from '../constants';
@@ -71,6 +72,41 @@ const GROUP_COLORS: Record<string, string> = {
     "default": "text-slate-200"
 };
 
+const GROUP_DESCRIPTIONS: Record<string, string> = {
+    "0A": "PI, PS, AF, PTY, Flags",
+    "0B": "PI, PS, AF, PTY, Flags",
+    "1A": "ECC, LIC, PIN",
+    "1B": "ECC, LIC, PIN",
+    "2A": "Radiotext",
+    "2B": "Radiotext",
+    "3A": "ODA AIDs List",
+    "3B": "ODA AIDs List",
+    "4A": "CT (Time & Date)",
+    "4B": "CT (Time & Date)",
+    "5A": "TDC / ODA",
+    "5B": "TDC / ODA",
+    "6A": "ODA / In-House Applications",
+    "6B": "ODA / In-House Applications",
+    "7A": "ODA / Paging",
+    "7B": "ODA / Paging",
+    "8A": "TMC",
+    "8B": "TMC",
+    "9A": "EWS (Emergency Warning System)",
+    "9B": "EWS (Emergency Warning System)",
+    "10A": "PTYN",
+    "10B": "PTYN",
+    "11A": "ODA",
+    "11B": "ODA",
+    "12A": "ODA",
+    "12B": "ODA",
+    "13A": "ODA / Enhanced Paging",
+    "13B": "ODA / Enhanced Paging",
+    "14A": "EON",
+    "14B": "EON TA",
+    "15A": "Long PS",
+    "15B": "Fast Basic Tuning"
+};
+
 const getGroupColor = (grp: string) => GROUP_COLORS[grp] || GROUP_COLORS["default"];
 
 // Generate list of all possible RDS groups (0A-15B)
@@ -90,6 +126,58 @@ const toBin = (val: number, bits: number) => {
 const toAscii = (val: number) => {
     if (val >= 32 && val <= 126) return String.fromCharCode(val);
     return '.';
+};
+
+const GroupStatItem: React.FC<{
+    grp: string;
+    count: number;
+    percentage: string;
+    hasData: boolean;
+    bgStyle: string;
+    colorClass: string;
+}> = ({ grp, count, percentage, hasData, bgStyle, colorClass }) => {
+    const [showTooltip, setShowTooltip] = useState(false);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const handleMouseEnter = () => {
+        timerRef.current = setTimeout(() => {
+            setShowTooltip(true);
+        }, 200);
+    };
+
+    const handleMouseLeave = () => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+        setShowTooltip(false);
+    };
+
+    const description = GROUP_DESCRIPTIONS[grp];
+
+    return (
+        <div 
+            className={`relative flex flex-col items-center justify-center p-1.5 rounded border ${bgStyle} transition-colors group cursor-default`}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            {/* Wrap content in a div to apply opacity only to content, not the tooltip */}
+            <div className={`flex flex-col items-center w-full ${!hasData ? 'opacity-50' : ''}`}>
+                <span className={`text-[10px] font-bold ${colorClass}`}>{grp}</span>
+                <div className="flex flex-col items-center leading-none mt-1">
+                    <span className="text-xs font-mono font-bold">{percentage}%</span>
+                    <span className="text-[9px] text-white mt-0.5">{count}</span>
+                </div>
+            </div>
+            
+            {showTooltip && description && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1.5 bg-slate-800 text-white text-[10px] font-mono rounded border border-slate-600 shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-50 animate-in fade-in zoom-in-95 duration-200 whitespace-nowrap pointer-events-none">
+                    {description}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-4 border-transparent border-t-slate-600"></div>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export const GroupAnalyzer: React.FC<GroupAnalyzerProps> = ({ data, active, onToggle, onReset }) => {
@@ -496,19 +584,22 @@ export const GroupAnalyzer: React.FC<GroupAnalyzerProps> = ({ data, active, onTo
                         
                         // Determine background style
                         // Fixed Logic: If data exists, it is active (Slate 800). No threshold blinking.
-                        let bgStyle = "bg-slate-950/50 border-slate-800 opacity-50";
+                        // Removed opacity-50 from the container style to prevent tooltip dimming
+                        let bgStyle = "bg-slate-950/50 border-slate-800";
                         if (hasData) {
                              bgStyle = "bg-slate-800 border-slate-600 text-slate-200 shadow-sm";
                         }
 
                         return (
-                            <div key={grp} className={`flex flex-col items-center justify-center p-1.5 rounded border ${bgStyle} transition-colors`}>
-                                <span className={`text-[10px] font-bold ${getGroupColor(grp)}`}>{grp}</span>
-                                <div className="flex flex-col items-center leading-none mt-1">
-                                    <span className="text-xs font-mono font-bold">{percentage}%</span>
-                                    <span className="text-[9px] text-white mt-0.5">{count}</span>
-                                </div>
-                            </div>
+                            <GroupStatItem 
+                                key={grp}
+                                grp={grp}
+                                count={count}
+                                percentage={percentage}
+                                hasData={hasData}
+                                bgStyle={bgStyle}
+                                colorClass={getGroupColor(grp)}
+                            />
                         );
                     })}
                 </div>
