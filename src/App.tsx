@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { RdsData, ConnectionStatus, PTY_RDS, PTY_RBDS, RtPlusTag, EonNetwork, RawGroup, TmcMessage, TmcServiceInfo, PsHistoryItem, RtHistoryItem, LogEntry } from './types';
-import { INITIAL_RDS_DATA, ODA_MAP } from './constants';
+import { INITIAL_RDS_DATA, ODA_MAP, TMC_EVENT_MAP } from './constants';
 import { LcdDisplay } from './components/LcdDisplay';
 import { InfoGrid } from './components/InfoGrid';
 import { GroupAnalyzer } from './components/GroupAnalyzer';
@@ -263,20 +263,10 @@ const getEventNature = (code: number, diversion: boolean): string => {
     return "Information"; 
 };
 
-// Basic Category mapper based on Code Ranges
+// Updated Category mapper to highlight unidentified codes
 const getEventCategory = (code: number): string => {
-   if (code === 0) return "Unknown";
-   if (code <= 100) return "Traffic Problem";
-   if (code <= 199) return "Accident"; 
-   if (code <= 300) return "Congestion"; 
-   if (code <= 400) return "Delay";
-   if (code <= 500) return "Road Works";
-   if (code <= 600) return "Road Closure";
-   if (code <= 700) return "Restriction";
-   if (code <= 800) return "Exit/Entry";
-   if (code <= 900) return "Weather"; 
-   if (code <= 1000) return "Road Cond."; 
-   return "Event";
+   if (TMC_EVENT_MAP[code]) return TMC_EVENT_MAP[code];
+   return `[Unidentified event type] (Code: ${code})`;
 };
 
 const convertMjd = (mjd: number): { day: number, month: number, year: number } | null => {
@@ -340,15 +330,20 @@ const App: React.FC = () => {
     ptynBuffer: new Array(8).fill(' '), 
     rtBuffer0: new Array(64).fill(' '), 
     rtBuffer1: new Array(64).fill(' '), 
-    rtMask0: new Array(64).fill(false),
-    rtMask1: new Array(64).fill(false),
+    
+    // RT Verification Masks (to ensure full decoding)
+    rtMask0: new Array(64).fill(false), // Array of 64 booleans
+    rtMask1: new Array(64).fill(false), // Array of 64 booleans
+    
+    // RT Stability
     rtCandidateString: "",
     rtStableSince: 0,
+
     afSet: [], 
     afListHead: null, 
     lastGroup0A3: null, // Initialized correctly
     afBMap: new Map<string, AfBEntry>(),
-    currentMethodBGroup: null,
+    currentMethodBGroup: null, 
     afType: 'Unknown',
     currentPi: "----",
     piCandidate: "----",
@@ -864,7 +859,7 @@ const App: React.FC = () => {
                         updateCount: 1
                     };
                     state.tmcBuffer.unshift(newMsg);
-                    if (state.tmcBuffer.length > 100) state.tmcBuffer.pop();
+                    if (state.tmcBuffer.length > 500) state.tmcBuffer.pop();
                 }
             }
         }
@@ -1052,7 +1047,7 @@ const App: React.FC = () => {
         // Tag 1: Length (6 bits) = G3[6..1]
         const tag1Len   = (g3 >> 1) & 0x3F;
         
-        // Tag 2: ID (6 bits) = G3[0] | G4[15..11]
+        // Tag 2: ID (6 bits) = G3[0] | g4[15..11]
         const tag2Id    = ((g3 & 0x01) << 5) | ((g4 >> 11) & 0x1F);
         // Tag 2: Start (6 bits) = G4[10..5]
         const tag2Start = (g4 >> 5) & 0x3F;
