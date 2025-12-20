@@ -1,3 +1,4 @@
+
 import { RdsData } from './types';
 
 // ODA AID Mapping
@@ -92,6 +93,14 @@ export const TMC_EVENT_MAP: Record<number, string> = {
     40: "Smog alert ended",
     41: "Overtaking lane(s) closed",
     42: "Overtaking lane(s) blocked",
+    43: "Overtaking lane(s) restricted",
+    44: "Fast lane closed",
+    45: "Fast lane blocked",
+    46: "Overtaking lane(s) reopened",
+    47: "Traffic congestion, average speed of 100 km/h",
+    48: "Traffic congestion, average speed of 90 km/h",
+    49: "Traffic congestion, average speed of 80 km/h",
+    50: "Traffic congestion, average speed of 110 km/h",
     51: "Roadworks - overtaking lane(s) closed",
     52: "Roadworks on the hard shoulder",
     53: "Roadworks in the emergency lane",
