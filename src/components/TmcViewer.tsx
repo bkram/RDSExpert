@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { RdsData, TmcMessage } from '../types';
 
@@ -32,7 +33,7 @@ export const TmcViewer: React.FC<TmcViewerProps> = ({ data, active, paused, onTo
                     <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
                         {/* Car Icon */}
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
-                        TRAFFIC MESSAGE CHANNEL (TMC) - EXPERIMENTAL DECODER
+                        TRAFFIC MESSAGE CHANNEL (TMC)
                     </h3>
                     {active && !paused && <span className="text-[10px] text-green-500 font-mono animate-pulse">● DECODING</span>}
                     {active && paused && <span className="text-[10px] text-yellow-500 font-mono">● PAUSED</span>}
@@ -85,10 +86,10 @@ export const TmcViewer: React.FC<TmcViewerProps> = ({ data, active, paused, onTo
 
             {active ? (
                 /* 3. Main Split View (Dark Mode) */
-                <div className="flex flex-col md:flex-row h-64 bg-slate-950 text-slate-300 font-sans text-sm">
+                <div className="flex flex-col landscape:flex-row md:flex-row h-80 bg-slate-950 text-slate-300 font-sans text-sm">
                     
                     {/* Left: Message List */}
-                    <div className="flex-1 overflow-y-auto border-r border-slate-800 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto border-b landscape:border-b-0 landscape:border-r md:border-b-0 md:border-r border-slate-800 custom-scrollbar">
                          <table className="w-full text-left border-collapse">
                              <thead className="bg-slate-900 sticky top-0 shadow-sm text-slate-400">
                                  <tr>
@@ -123,7 +124,7 @@ export const TmcViewer: React.FC<TmcViewerProps> = ({ data, active, paused, onTo
                     </div>
 
                     {/* Right: Detail View (Dark Mode) */}
-                    <div className="w-full md:w-2/5 bg-slate-900 p-4 overflow-y-auto flex flex-col gap-3 font-mono text-[11px] leading-relaxed select-text custom-scrollbar">
+                    <div className="w-full landscape:w-2/5 md:w-2/5 flex-1 landscape:flex-none md:flex-none bg-slate-900 p-4 overflow-y-auto flex flex-col gap-3 font-mono text-[11px] leading-relaxed select-text custom-scrollbar">
                         {selectedMsg ? (
                             <>
                                 <div className="border-b border-slate-700 pb-2 mb-1">

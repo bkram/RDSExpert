@@ -117,19 +117,19 @@ export const InfoGrid: React.FC<InfoGridProps> = ({ data, rdsStandard }) => {
     <div className="w-full space-y-4">
       {/* AF List Card */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+        <div className="flex flex-row justify-between items-center mb-4 gap-2 md:gap-4">
+            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2 min-w-0">
               {/* Radio Tower / Antenna Icon - Replaced by FontAwesome as requested */}
-              <i className="fa-solid fa-tower-broadcast text-base"></i>
-              Alternative Frequencies (AF) 
-              <span className="ml-2 text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded border border-slate-600">
+              <i className="fa-solid fa-tower-broadcast text-base shrink-0"></i>
+              <span className="truncate">Alternative Frequencies (AF)</span>
+              <span className="hidden sm:inline-block ml-2 text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded border border-slate-600 shrink-0">
                 {getMethodLabel()}
               </span>
             </h3>
             
             <button 
               onClick={() => setSortAf(!sortAf)}
-              className={`text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded border transition-colors ${sortAf ? 'bg-blue-600 text-white border-blue-500' : 'bg-transparent text-slate-500 border-slate-700 hover:border-slate-500'}`}
+              className={`text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded border transition-colors shrink-0 ${sortAf ? 'bg-blue-600 text-white border-blue-500' : 'bg-transparent text-slate-500 border-slate-700 hover:border-slate-500'}`}
             >
               {sortAf ? 'FREQUENCY SORTING ENABLED' : 'FREQUENCY SORTING DISABLED'}
             </button>
@@ -142,14 +142,14 @@ export const InfoGrid: React.FC<InfoGridProps> = ({ data, rdsStandard }) => {
 
       {/* Radiotext+ Card */}
       <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+        <div className="flex flex-row justify-between items-center mb-4 gap-2 md:gap-4">
+            <h3 className="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2 shrink-0">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>
             Radiotext+
             </h3>
 
             {/* Running/Toggle Bits Indicators */}
-            <div className="flex items-center gap-4 bg-slate-900/40 px-3 py-1.5 rounded border border-slate-800/50">
+            <div className="flex items-center gap-4 bg-slate-900/40 px-3 py-1.5 rounded border border-slate-800/50 shrink-0">
                 <BitIndicator label="ITEM RUNNING BIT" active={data.rtPlusItemRunning} />
                 <div className="w-px h-3 bg-slate-700"></div>
                 <BitIndicator label="ITEM TOGGLE BIT" active={data.rtPlusItemToggle} />

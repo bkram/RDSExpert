@@ -262,32 +262,32 @@ export const LcdDisplay: React.FC<LcdDisplayProps> = ({ data, rdsStandard, onRes
       <div className="mt-8 border-t border-slate-800/50 pt-6 grid grid-cols-1 gap-4">
         
         {/* Radio Text A */}
-        <div className={`flex items-start space-x-4 transition-opacity duration-300 ${!data.textAbFlag ? 'opacity-100' : 'opacity-60'}`}>
-          <div className="flex flex-col items-center space-y-2 pt-2">
+        <div className={`flex flex-col md:flex-row items-start md:space-x-4 transition-opacity duration-300 ${!data.textAbFlag ? 'opacity-100' : 'opacity-60'}`}>
+          <div className="flex flex-row md:flex-col items-center space-x-2 md:space-x-0 md:space-y-2 pt-2 mb-1 md:mb-0">
              <span className="text-slate-400 font-bold text-xs uppercase shrink-0 px-2 py-1 border border-slate-700 rounded w-16 text-center">RT A</span>
              {/* Blue indicator only active if flag is A (false) AND we have actual content */}
              <div className={`w-3 h-3 rounded-full shadow-[0_0_5px_currentColor] border border-black/50 transition-colors duration-200 ${!data.textAbFlag && hasRtA ? 'bg-blue-500 text-blue-500' : 'bg-slate-800 text-slate-800'}`}></div>
           </div>
-          <div className="flex-1 bg-slate-800/30 rounded py-2 px-4 overflow-hidden min-h-[56px] flex items-center border border-transparent transition-colors duration-300 relative">
+          <div className="w-full flex-1 min-w-0 bg-slate-800/30 rounded py-2 px-4 min-h-[56px] flex items-center border border-transparent transition-colors duration-300 relative overflow-x-auto no-scrollbar">
              {/* Selection Border: Active if flag is A AND has content */}
              {!data.textAbFlag && hasRtA && <div className="absolute inset-0 border border-blue-500/30 rounded pointer-events-none"></div>}
-             <span className="font-mono text-xl md:text-2xl text-slate-200 whitespace-pre break-all leading-tight">
+             <span className="font-mono text-lg md:text-2xl text-slate-200 whitespace-pre leading-tight shrink-0">
                <RenderEnhancedText text={data.rtA} type="rt" />
              </span>
           </div>
         </div>
 
         {/* Radio Text B */}
-        <div className={`flex items-start space-x-4 transition-opacity duration-300 ${data.textAbFlag ? 'opacity-100' : 'opacity-60'}`}>
-          <div className="flex flex-col items-center space-y-2 pt-2">
+        <div className={`flex flex-col md:flex-row items-start md:space-x-4 transition-opacity duration-300 ${data.textAbFlag ? 'opacity-100' : 'opacity-60'}`}>
+          <div className="flex flex-row md:flex-col items-center space-x-2 md:space-x-0 md:space-y-2 pt-2 mb-1 md:mb-0">
             <span className="text-slate-400 font-bold text-xs uppercase shrink-0 px-2 py-1 border border-slate-700 rounded w-16 text-center">RT B</span>
              {/* Blue indicator only active if flag is B (true) AND we have actual content */}
              <div className={`w-3 h-3 rounded-full shadow-[0_0_5px_currentColor] border border-black/50 transition-colors duration-200 ${data.textAbFlag && hasRtB ? 'bg-blue-500 text-blue-500' : 'bg-slate-800 text-slate-800'}`}></div>
           </div>
-          <div className="flex-1 bg-slate-800/30 rounded py-2 px-4 overflow-hidden min-h-[56px] flex items-center relative">
+          <div className="w-full flex-1 min-w-0 bg-slate-800/30 rounded py-2 px-4 min-h-[56px] flex items-center relative overflow-x-auto no-scrollbar">
              {/* Selection Border: Active if flag is B AND has content */}
              {data.textAbFlag && hasRtB && <div className="absolute inset-0 border border-blue-500/30 rounded pointer-events-none"></div>}
-             <span className="font-mono text-xl md:text-2xl text-slate-200 whitespace-pre break-all leading-tight">
+             <span className="font-mono text-lg md:text-2xl text-slate-200 whitespace-pre leading-tight shrink-0">
                <RenderEnhancedText text={data.rtB} type="rt" />
              </span>
           </div>
@@ -298,42 +298,45 @@ export const LcdDisplay: React.FC<LcdDisplayProps> = ({ data, rdsStandard, onRes
       {/* Row: PTY, PTYN and Services Flags */}
       <div className="mt-4 pt-4 border-t border-slate-800/30 flex flex-col md:flex-row gap-4 items-stretch">
         
-        {/* PTY (RDS | RBDS) - Left */}
-        <div className="flex-[1.3] flex items-center space-x-3 bg-slate-900/40 rounded p-2 border border-slate-800/50 overflow-hidden">
-           <span className="text-[10px] font-bold text-slate-500 uppercase px-1 shrink-0">PTY</span>
-           <span className="font-mono text-lg text-white tracking-wide truncate">
-             {currentPtyName} <span className="text-slate-500 text-sm">[{data.pty}]</span>
-           </span>
-        </div>
-
-        {/* PTYN - Center */}
-        <div className="flex-1 flex items-center space-x-3 bg-slate-900/40 rounded p-2 border border-slate-800/50 overflow-hidden">
-           <span className="text-[10px] font-bold text-slate-500 uppercase px-1 shrink-0">PTYN</span>
-           <span className="font-mono text-lg text-white tracking-wide whitespace-pre truncate">
-              {(hasPtyn) ? <RenderEnhancedText text={data.ptyn} type="ptyn" /> : <span className="text-slate-600 italic text-sm">No Data</span>}
-           </span>
-        </div>
-
-        {/* Service Flags (RT+, EON, TMC) - Right */}
-        <div className="shrink-0 flex items-center justify-center gap-2 bg-slate-900/40 rounded p-2 border border-slate-800/50">
+        {/* Service Flags (RT+, EON, TMC) - TOP on mobile via order-1, RIGHT on PC via md:order-3 */}
+        <div className="order-1 md:order-3 shrink-0 flex items-center justify-center gap-2 bg-slate-900/40 rounded p-2 border border-slate-800/50">
             <FlagBadge active={data.hasOda} label="ODA" color="purple" tooltip={odaTooltip} />
             <FlagBadge active={data.hasRtPlus} label="RT+" color="green" />
             <FlagBadge active={data.hasEon} label="EON" color="yellow" />
             <FlagBadge active={data.hasTmc} label="TMC" alert />
         </div>
 
+        {/* Combined PTY & PTYN Wrapper - Grouped for mobile alignment (order-2 on mobile, md:order-1 on PC) */}
+        <div className="order-2 md:order-1 flex flex-row gap-4 flex-1 md:flex-[2.3] items-stretch">
+          {/* PTY (RDS | RBDS) - Left */}
+          <div className="flex-1 md:flex-[1.3] flex items-center space-x-3 bg-slate-900/40 rounded p-2 border border-slate-800/50 overflow-x-auto no-scrollbar">
+             <span className="text-[10px] font-bold text-slate-500 uppercase px-1 shrink-0">PTY</span>
+             <span className="font-mono text-lg text-white tracking-wide shrink-0">
+               {currentPtyName} <span className="text-slate-500 text-sm">[{data.pty}]</span>
+             </span>
+          </div>
+
+          {/* PTYN - Center */}
+          <div className="flex-1 md:flex-1 flex items-center space-x-3 bg-slate-900/40 rounded p-2 border border-slate-800/50 overflow-x-auto no-scrollbar">
+             <span className="text-[10px] font-bold text-slate-500 uppercase px-1 shrink-0">PTYN</span>
+             <span className="font-mono text-lg text-white tracking-wide whitespace-pre shrink-0">
+                {(hasPtyn) ? <RenderEnhancedText text={data.ptyn} type="ptyn" /> : <span className="text-slate-600 italic text-sm">No Data</span>}
+             </span>
+          </div>
+        </div>
+
       </div>
 
       {/* Row: Long PS + ECC + LIC */}
-      <div className="mt-4 flex flex-col md:flex-row gap-4 items-stretch md:items-center">
-        <div className={`flex-1 flex items-center space-x-3 bg-slate-900/40 rounded p-2 border border-slate-800/50 min-w-[200px] transition-opacity duration-300 ${hasLongPs ? 'opacity-100' : 'opacity-50'}`}>
+      <div className="mt-4 flex flex-row md:flex-row gap-4 items-stretch md:items-center">
+        <div className={`flex-[2] md:flex-1 flex items-center space-x-3 bg-slate-900/40 rounded p-2 border border-slate-800/50 min-w-0 md:min-w-[200px] transition-opacity duration-300 ${hasLongPs ? 'opacity-100' : 'opacity-50'}`}>
              <div className="flex flex-col items-center space-y-1">
                  <span className="text-[10px] font-bold text-slate-500 uppercase px-1">LONG PS</span>
                  <div className={`w-2 h-2 rounded-full shadow-[0_0_4px_currentColor] border border-black/50 transition-colors duration-200 ${hasLongPs ? 'bg-blue-500 text-blue-500' : 'bg-slate-800 text-slate-800'}`}></div>
              </div>
-             <div className="flex-1 px-3">
+             <div className="flex-1 px-3 overflow-x-auto no-scrollbar">
                {(hasLongPs || isRaw('lps')) ? (
-                  <span className="font-mono text-lg text-white tracking-wide whitespace-pre truncate">
+                  <span className="font-mono text-lg text-white tracking-wide whitespace-pre block shrink-0">
                     <RenderEnhancedText text={data.longPs} type="lps" />
                   </span>
                ) : (
@@ -344,7 +347,7 @@ export const LcdDisplay: React.FC<LcdDisplayProps> = ({ data, rdsStandard, onRes
         
         {/* ECC Box with Tooltip */}
         <div 
-          className="relative flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 w-24 justify-center group/ecc cursor-default"
+          className="relative flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 w-24 justify-center group/ecc cursor-default shrink-0"
           onMouseEnter={handleEccMouseEnter}
           onMouseLeave={handleEccMouseLeave}
         >
@@ -360,7 +363,7 @@ export const LcdDisplay: React.FC<LcdDisplayProps> = ({ data, rdsStandard, onRes
 
         {/* LIC Box with Tooltip */}
         <div 
-          className="relative flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 w-24 justify-center group/lic cursor-default"
+          className="relative flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 w-24 justify-center group/lic cursor-default shrink-0"
           onMouseEnter={handleLicMouseEnter}
           onMouseLeave={handleLicMouseLeave}
         >
@@ -380,19 +383,22 @@ export const LcdDisplay: React.FC<LcdDisplayProps> = ({ data, rdsStandard, onRes
 
       {/* Row: CT and PIN */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
-        {/* Local CT */}
-        <div className="flex-1 flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 justify-center">
-            <span className="text-[10px] font-bold text-slate-500 uppercase mr-2">Local CT</span>
-            <span className={`font-mono text-lg tracking-wide ${data.localTime ? 'text-white' : 'text-slate-600'}`}>{data.localTime || "--/--/-- --:--"}</span>
-        </div>
-        
-        {/* UTC CT */}
-        <div className="flex-1 flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 justify-center">
-            <span className="text-[10px] font-bold text-slate-500 uppercase mr-2">UTC CT</span>
-            <span className={`font-mono text-lg tracking-wide ${data.utcTime ? 'text-white' : 'text-slate-600'}`}>{data.utcTime || "--/--/-- --:--"}</span>
+        {/* Local & UTC CT Wrapper for mobile row alignment */}
+        <div className="flex flex-row gap-4 flex-1 items-stretch md:contents">
+          {/* Local CT */}
+          <div className="flex-1 flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 justify-center">
+              <span className="text-[10px] font-bold text-slate-500 uppercase mr-2">Local CT</span>
+              <span className={`font-mono text-lg tracking-wide ${data.localTime ? 'text-white' : 'text-slate-600'}`}>{data.localTime || "--/--/-- --:--"}</span>
+          </div>
+          
+          {/* UTC CT */}
+          <div className="flex-1 flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 justify-center">
+              <span className="text-[10px] font-bold text-slate-500 uppercase mr-2">UTC CT</span>
+              <span className={`font-mono text-lg tracking-wide ${data.utcTime ? 'text-white' : 'text-slate-600'}`}>{data.utcTime || "--/--/-- --:--"}</span>
+          </div>
         </div>
 
-        {/* PIN */}
+        {/* PIN - Separate line on mobile (below CTs) thanks to flex-col on parent, but horizontal on PC */}
         <div className="flex-1 flex items-center space-x-2 bg-slate-900/40 rounded p-2 border border-slate-800/50 justify-center">
             <span className="text-[10px] font-bold text-slate-500 uppercase mr-2">PIN</span>
             <span className="font-mono text-lg text-white tracking-wide">
@@ -402,7 +408,7 @@ export const LcdDisplay: React.FC<LcdDisplayProps> = ({ data, rdsStandard, onRes
       </div>
 
       {/* Row: DI Flags (Stereo, Art Head, Compressed, Dynamic PTY) */}
-      <div className="mt-4 flex flex-col md:flex-row gap-4 items-stretch justify-between">
+      <div className="mt-4 flex flex-row md:flex-row gap-2 md:gap-4 items-stretch justify-between">
           <DiFlag active={data.stereo} label="STEREO" />
           <DiFlag active={data.artificialHead} label="ARTIFICIAL HEAD" />
           <DiFlag active={data.compressed} label="COMPRESSED" />
@@ -440,7 +446,7 @@ const FlagBadge: React.FC<{ active: boolean; label: string; alert?: boolean; col
   } else if (color === 'green') {
       activeClass = "text-green-400 bg-green-900/20 border-green-500/50 shadow-[0_0_8px_rgba(34,197,94,0.3)]";
   } else if (color === 'yellow') {
-      activeClass = "text-yellow-400 bg-yellow-900/20 border-yellow-500/50 shadow-[0_0_8px_rgba(234,179,8,0.3)]";
+      activeClass = "text-yellow-400 bg-green-900/20 border-yellow-500/50 shadow-[0_0_8px_rgba(234,179,8,0.3)]";
   } else if (color === 'purple') {
       activeClass = "text-purple-400 bg-purple-900/20 border-purple-500/50 shadow-[0_0_8px_rgba(168,85,247,0.3)]";
   }
