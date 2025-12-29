@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { 
   RdsData, 
@@ -504,6 +505,7 @@ const App: React.FC = () => {
     tp: false,
     ta: false,
     ms: false,
+    // Fix: Initialize boolean properties with boolean values instead of type names
     diStereo: false,
     diArtificialHead: false,
     diCompressed: false,
@@ -1460,6 +1462,21 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-300 font-sans selection:bg-blue-500/30">
+      {/* Mobile Orientation Warning Overlay */}
+      <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#0f172a] text-center p-8 md:hidden portrait:flex landscape:hidden">
+        <div className="mb-6 text-blue-500 animate-pulse">
+           <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ transform: 'rotate(90deg)' }}>
+             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+           </svg>
+        </div>
+        <p className="text-white text-lg font-bold leading-tight">
+          The mobile version is optimized for landscape mode only.
+        </p>
+        <p className="text-blue-400 text-lg font-bold mt-2">
+          Please rotate your smartphone!
+        </p>
+      </div>
+
       {showSecurityError && (
         <SecurityErrorModal onClose={() => setShowSecurityError(false)} />
       )}
@@ -1470,27 +1487,29 @@ const App: React.FC = () => {
               <span className="font-bold text-2xl text-blue-500 tracking-tighter group-hover:text-blue-400 transition-colors">EXPERT</span>
             </div>
             
-            <div className="bg-slate-900/50 border border-slate-800 rounded px-3 py-2 flex items-center gap-3 w-full md:w-auto shrink-0 text-xs font-mono text-slate-500">
-              <span>STATUS</span> 
-              <span className={`font-bold ${status === ConnectionStatus.CONNECTED ? 'text-green-400' : status === ConnectionStatus.ERROR ? 'text-red-400' : 'text-slate-400'}`}>
-                {status}
-              </span>
-            </div>
-            
-            <div className="bg-slate-900/50 border border-slate-800 rounded px-3 py-2 flex items-center gap-3 w-full md:w-auto shrink-0 text-xs font-mono text-slate-500">
-              <span>PACKETS</span> 
-              <span className="text-slate-200">{packetCount.toLocaleString()}</span>
-            </div>
-            
-            <div className="shrink-0">
-              <select 
-                value={rdsStandard} 
-                onChange={(e) => setRdsStandard(e.target.value as 'RDS' | 'RBDS')} 
-                className="bg-slate-900/50 border border-slate-800 text-slate-300 text-xs font-mono rounded p-2 focus:outline-none focus:border-blue-500 cursor-pointer h-full"
-              >
-                <option value="RDS">RDS MODE</option>
-                <option value="RBDS">RBDS MODE</option>
-              </select>
+            <div className="flex flex-row gap-2 w-full md:w-auto items-stretch">
+                <div className="bg-slate-900/50 border border-slate-800 rounded px-2 py-1.5 md:px-3 md:py-2 flex items-center gap-2 md:gap-3 flex-1 md:flex-none shrink-0 text-[10px] md:text-xs font-mono text-slate-500">
+                  <span>STATUS</span> 
+                  <span className={`font-bold ${status === ConnectionStatus.CONNECTED ? 'text-green-400' : status === ConnectionStatus.ERROR ? 'text-red-400' : 'text-slate-400'}`}>
+                    {status}
+                  </span>
+                </div>
+                
+                <div className="bg-slate-900/50 border border-slate-800 rounded px-2 py-1.5 md:px-3 md:py-2 flex items-center gap-2 md:gap-3 flex-1 md:flex-none shrink-0 text-[10px] md:text-xs font-mono text-slate-500">
+                  <span>PACKETS</span> 
+                  <span className="text-slate-200">{packetCount.toLocaleString()}</span>
+                </div>
+                
+                <div className="flex-1 md:flex-none shrink-0">
+                  <select 
+                    value={rdsStandard} 
+                    onChange={(e) => setRdsStandard(e.target.value as 'RDS' | 'RBDS')} 
+                    className="w-full bg-slate-900/50 border border-slate-800 text-slate-300 text-[10px] md:text-xs font-mono rounded p-1.5 md:p-2 focus:outline-none focus:border-blue-500 cursor-pointer h-full"
+                  >
+                    <option value="RDS">RDS MODE</option>
+                    <option value="RBDS">RBDS MODE</option>
+                  </select>
+                </div>
             </div>
             
             <div className="flex items-center gap-2 flex-1">
