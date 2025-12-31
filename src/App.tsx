@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { 
   RdsData, 
@@ -132,9 +131,9 @@ const RDS_G2_MAP: Record<number, string> = {
   0x8A: 'Ñ', 
   0x8B: 'Ç', 
   0x8C: 'Ş', 
-  0x8D: 'β', 
+  0x8D: 'ß', 
   0x8E: '¡', 
-  0x8F: 'Ŀ',
+  0x8F: 'Ĳ',
   // 0x90 - 0x9F
   0x90: 'â', 
   0x91: 'ä', 
@@ -146,7 +145,7 @@ const RDS_G2_MAP: Record<number, string> = {
   0x97: 'ö',
   0x98: 'û', 
   0x99: 'ü', 
-  0x9A: 'å', 
+  0x9A: 'ñ', 
   0x9B: 'ç', 
   0x9C: 'ş', 
   0x9D: 'ğ', 
@@ -160,41 +159,41 @@ const RDS_G2_MAP: Record<number, string> = {
   0xA4: 'Ğ', 
   0xA5: 'ě', 
   0xA6: 'Ň', 
-  0xA7: 'Ő',
+  0xA7: 'ő',
   0xA8: 'π', 
-  0xA9: 'Š', 
+  0xA9: '€', 
   0xAA: '£', 
   0xAB: '$', 
   0xAC: '←', 
   0xAD: '↑', 
-  0xAE: 'Ž', 
+  0xAE: '→', 
   0xAF: '↓',
   // 0xB0 - 0xBF
-  0xB0: '°', 
-  0xB1: '±', 
+  0xB0: '⁰',
+  0xB1: '¹', 
   0xB2: '²', 
   0xB3: '³', 
-  0xB4: '×', 
-  0xB5: 'µ', 
-  0xB6: '¶', 
-  0xB7: '·',
-  0xB8: '÷', 
-  0xB9: 'š', 
-  0xBA: 'º', 
-  0xBB: '»', 
+  0xB4: '±', 
+  0xB5: 'İ', 
+  0xB6: 'ń', 
+  0xB7: 'ű',
+  0xB8: 'μ', 
+  0xB9: '¿', 
+  0xBA: '÷', 
+  0xBB: '°', 
   0xBC: '¼', 
   0xBD: '½', 
-  0xBE: 'ž', 
-  0xBF: '¿',
+  0xBE: '¾', 
+  0xBF: '§',
   // 0xC0 - 0xCF
   0xC0: 'Á', 
   0xC1: 'À', 
   0xC2: 'É', 
   0xC3: 'È', 
   0xC4: 'Í', 
-  0xC5: 'Ý', 
+  0xC5: 'Ì', 
   0xC6: 'Ó', 
-  0xC7: 'Ç',
+  0xC7: 'Ò',
   0xC8: 'Ú', 
   0xC9: 'Ù', 
   0xCA: 'Ř', 
@@ -202,12 +201,12 @@ const RDS_G2_MAP: Record<number, string> = {
   0xCC: 'Š', 
   0xCD: 'Ž', 
   0xCE: 'Đ', 
-  0xCF: 'Ď',
+  0xCF: 'Ŀ',
   // 0xD0 - 0xDF
   0xD0: 'Â', 
   0xD1: 'Ä', 
   0xD2: 'Ê', 
-  0xD3: 'Œ', 
+  0xD3: 'Ë', 
   0xD4: 'Î', 
   0xD5: 'Ï', 
   0xD6: 'Ô', 
@@ -219,40 +218,40 @@ const RDS_G2_MAP: Record<number, string> = {
   0xDC: 'š', 
   0xDD: 'ž', 
   0xDE: 'đ', 
-  0xDF: 'ß',
+  0xDF: 'ŀ',
   // 0xE0 - 0xEF
-  0xE0: 'à', 
+  0xE0: 'Ã', 
   0xE1: 'Å', 
   0xE2: 'Æ', 
   0xE3: 'Œ', 
-  0xE4: 'ä', 
+  0xE4: 'ŷ', 
   0xE5: 'Ý', 
-  0xE6: 'ć', 
+  0xE6: 'Õ', 
   0xE7: 'Ø',
-  0xE8: 'è', 
-  0xE9: 'é', 
-  0xEA: 'ę', 
+  0xE8: 'Þ', 
+  0xE9: 'Ŋ', 
+  0xEA: 'Ŕ', 
   0xEB: 'Ć', 
-  0xEC: 'ě', 
-  0xED: 'í', 
-  0xEE: 'î', 
-  0xEF: 'ď',
+  0xEC: 'Ś', 
+  0xED: 'Ź', 
+  0xEE: 'Ŧ', 
+  0xEF: 'ð',
   // 0xF0 - 0xFF
-  0xF0: 'đ', 
+  0xF0: 'ã', 
   0xF1: 'å', 
   0xF2: 'æ', 
   0xF3: 'œ', 
-  0xF4: 'ô', 
-  0xF5: 'ő', 
-  0xF6: 'ö', 
+  0xF4: 'ŵ', 
+  0xF5: 'ý', 
+  0xF6: 'õ', 
   0xF7: 'ø',
-  0xF8: 'ø', 
-  0xF9: 'ů', 
-  0xFA: 'ú', 
+  0xF8: 'þ', 
+  0xF9: 'ŋ', 
+  0xFA: 'ŕ', 
   0xFB: 'ć', 
-  0xFC: 'ü', 
-  0xFD: 'ý', 
-  0xFE: 'ţ', 
+  0xFC: 'ś', 
+  0xFD: 'ź', 
+  0xFE: 'ŧ', 
   0xFF: 'ÿ'
 };
 
@@ -505,7 +504,6 @@ const App: React.FC = () => {
     tp: false,
     ta: false,
     ms: false,
-    // Fix: Initialize boolean properties with boolean values instead of type names
     diStereo: false,
     diArtificialHead: false,
     diCompressed: false,
@@ -537,6 +535,7 @@ const App: React.FC = () => {
     groupSequence: [],
     
     graceCounter: GRACE_PERIOD_PACKETS,
+    /* Fixed: Changed 'boolean' type to 'false' value and changed semicolon to comma */
     isDirty: false,
     
     // Raw Buffer for Hex Viewer
@@ -778,9 +777,9 @@ const App: React.FC = () => {
       time: new Date().toLocaleTimeString('fr-FR')
     });
 
+    state.groupCounts[groupStr] = (state.groupCounts[groupStr] || 0) + 1;
+    state.groupTotal++;
     if (analyzerActiveRef.current) {
-      state.groupCounts[groupStr] = (state.groupCounts[groupStr] || 0) + 1;
-      state.groupTotal++;
       state.groupSequence.push(groupStr);
       if (state.groupSequence.length > 3000) { 
         state.groupSequence.splice(0, 1000);
@@ -1274,8 +1273,8 @@ const App: React.FC = () => {
           afBLists: afBLists, 
           afType: state.afType, 
           ber: state.graceCounter > 0 ? 0 : cBer,
-          groupCounts: analyzerActiveRef.current ? { ...state.groupCounts } : prev.groupCounts, 
-          groupTotal: analyzerActiveRef.current ? state.groupTotal : prev.groupTotal, 
+          groupCounts: { ...state.groupCounts }, 
+          groupTotal: state.groupTotal, 
           groupSequence: analyzerActiveRef.current ? [...state.groupSequence] : prev.groupSequence, 
           recentGroups: recent, 
           psHistory: [...state.psHistoryBuffer], 
@@ -1294,6 +1293,13 @@ const App: React.FC = () => {
     if (!serverUrl) {
       return;
     }
+
+    // Réinitialisation du compteur de paquets pour une nouvelle connexion uniquement
+    packetCountRef.current = 0;
+    setPacketCount(0);
+
+    // Réinitialisation forcée des données RDS avant la nouvelle connexion
+    resetData();
     
     if (wsRef.current) {
       wsRef.current.onopen = null;
@@ -1355,6 +1361,13 @@ const App: React.FC = () => {
       
       ws.onmessage = (evt) => {
         let chunk = typeof evt.data === "string" ? evt.data : new TextDecoder("windows-1252").decode(evt.data); 
+        
+        // Detection of hardware reset sequence (RESET-------) to clear UI instantly
+        if (chunk.includes("RESET-------")) {
+          resetData();
+          lineBufferRef.current = "";
+        }
+
         lineBufferRef.current += chunk; 
         if (chunk.trim().length > 0) {
           setLastRawPacket(chunk.substring(0, 40));
@@ -1384,10 +1397,11 @@ const App: React.FC = () => {
             const b = [m[1], m[2], m[3], m[4]]; 
             if (b.some((x) => x.includes('-'))) { 
               packetCountRef.current++; updateBer(true); 
+              const s = decoderState.current; 
+              s.groupTotal++;
+              s.groupCounts["--"] = (s.groupCounts["--"] || 0) + 1; 
               if (analyzerActiveRef.current) { 
-                const s = decoderState.current; 
-                s.groupTotal++; s.groupSequence.push("--"); 
-                s.groupCounts["--"] = (s.groupCounts["--"] || 0) + 1; 
+                s.groupSequence.push("--"); 
               } 
               decoderState.current.isDirty = true; 
             } else { 
