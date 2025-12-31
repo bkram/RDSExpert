@@ -889,10 +889,9 @@ const App: React.FC = () => {
     } else if (groupTypeVal === 16) {
       state.hasTmc = true;
       if (tmcActiveRef.current && !tmcPausedRef.current) {
-        const tuningFlag = (g2 >> 4) & 0x01; // Bit T
+        const tuningFlag = (g2 >> 4) & 0x01;
         
         if (tuningFlag === 1) {
-          // Message Système ( LTN, SID, AFI )
           const ltn = (g3 >> 10) & 0x3F;
           const sid = (g3 >> 2) & 0x3F;
           if (ltn > 0 || sid > 0) {
@@ -905,10 +904,9 @@ const App: React.FC = () => {
             };
           }
         } else {
-          // Message Utilisateur ( T=0 )
           const cc = g2 & 0x07;
           
-          // Décodage des paramètres du Bloc 3
+          // Block 3 system messages decoding
           // Alert-C Standard (Single Message 11-bit): 
           // B3: [Duration(3)][Diversion(1)][Direction(1)][Event(11)]
           const durationCode = (g3 >> 13) & 0x07;
@@ -916,10 +914,10 @@ const App: React.FC = () => {
           const direction = !!((g3 >> 11) & 0x01);
           const eventCode = g3 & 0x07FF; 
           
-          // Le Bloc 4 contient la localisation sur 16 bits
+          // Block 4 contains the location code on 16 bits
           const location = g4; 
           
-          // Filtre Filler (Remplissage) : On ignore si Event=0 ET Loc=0
+          // Ignores if Event and Loc =0
           if (eventCode === 0 && location === 0) {
             return;
           }
@@ -933,7 +931,7 @@ const App: React.FC = () => {
             expiresTime = "Indefinite";
           }
 
-          // Mise à jour de l'urgence et de la nature de façon dynamique
+          // Dynamic update of the Emergency and Nature values
           const urgency = getEventUrgency(eventCode);
           const nature = getEventNature(eventCode);
 
@@ -1294,11 +1292,11 @@ const App: React.FC = () => {
       return;
     }
 
-    // Réinitialisation du compteur de paquets pour une nouvelle connexion uniquement
+    // Packets counter reset when a new connection is established
     packetCountRef.current = 0;
     setPacketCount(0);
 
-    // Réinitialisation forcée des données RDS avant la nouvelle connexion
+    // Forced RDS data reset before the new connection is established
     resetData();
     
     if (wsRef.current) {
@@ -1362,7 +1360,7 @@ const App: React.FC = () => {
       ws.onmessage = (evt) => {
         let chunk = typeof evt.data === "string" ? evt.data : new TextDecoder("windows-1252").decode(evt.data); 
         
-        // Detection of hardware reset sequence (RESET-------) to clear UI instantly
+        // RDS data reset when a frequency change is detected
         if (chunk.includes("RESET-------")) {
           resetData();
           lineBufferRef.current = "";
@@ -1440,7 +1438,7 @@ const App: React.FC = () => {
     }
   };
 
-  // Ajout de l'auto-connexion si le paramètre 'url' est présent dans l'URL de la page
+  // Auto-connect feature to the server websocket when the "?url=" parameter is present in the indicated link
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('url')) {
